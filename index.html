@@ -27,14 +27,21 @@
 
         .background-canvas {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            top: 0;
+            left: 0;
             z-index: -1;
             width: 100vw;
-            height: auto;
-            max-height: 100vh;
+            height: 100vh;
+            /* Prevent resize when mobile browser chrome hides/shows */
+            height: 100svh; /* Use small viewport height on supporting browsers */
             object-fit: cover;
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            /* iOS specific: use -webkit-fill-available */
+            .background-canvas {
+                height: -webkit-fill-available;
+            }
         }
 
         .content {
@@ -479,6 +486,10 @@
         // Detect mobile device
         const isMobile = window.innerWidth <= 768;
 
+        // On mobile, capture initial viewport height to prevent resize when browser chrome hides/shows
+        const initialHeight = window.innerHeight;
+        const viewportHeight = isMobile ? initialHeight : window.innerHeight;
+
         // Set canvas size to match viewport with device pixel ratio for sharp rendering
         // Use 1x DPR on mobile to reduce memory, 2x max on desktop
         const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
@@ -486,28 +497,40 @@
         // Cap canvas dimensions to prevent excessive memory usage
         const maxDimension = isMobile ? 1920 : 3840;
         const canvasWidth = Math.min(window.innerWidth * dpr, maxDimension);
-        const canvasHeight = Math.min(window.innerHeight * dpr, maxDimension);
+        const canvasHeight = Math.min(viewportHeight * dpr, maxDimension);
 
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = window.innerHeight + 'px';
+        canvas.style.height = viewportHeight + 'px';
 
         // Handle window resize
         let resizeTimeout;
+        let lastWidth = window.innerWidth;
+
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
-                const isMobile = window.innerWidth <= 768;
+                const currentWidth = window.innerWidth;
+                const isMobile = currentWidth <= 768;
+
+                // On mobile, only resize if width changed (rotation), ignore height changes (browser chrome)
+                if (isMobile && currentWidth === lastWidth) {
+                    return;
+                }
+
+                lastWidth = currentWidth;
+
+                const viewportHeight = isMobile ? initialHeight : window.innerHeight;
                 const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
                 const maxDimension = isMobile ? 1920 : 3840;
-                const canvasWidth = Math.min(window.innerWidth * dpr, maxDimension);
-                const canvasHeight = Math.min(window.innerHeight * dpr, maxDimension);
+                const canvasWidth = Math.min(currentWidth * dpr, maxDimension);
+                const canvasHeight = Math.min(viewportHeight * dpr, maxDimension);
 
                 canvas.width = canvasWidth;
                 canvas.height = canvasHeight;
-                canvas.style.width = window.innerWidth + 'px';
-                canvas.style.height = window.innerHeight + 'px';
+                canvas.style.width = currentWidth + 'px';
+                canvas.style.height = viewportHeight + 'px';
                 render(); // Re-render at new size
             }, 250); // Debounce resize events
         });
