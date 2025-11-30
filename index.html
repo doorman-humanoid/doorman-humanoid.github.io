@@ -244,6 +244,10 @@
             height: 32px;
         }
 
+        .logos-section img.logo-larger {
+            height: 42px;
+        }
+
         .section-title {
             font-size: 2.5rem;
             font-weight: 500;
@@ -297,6 +301,7 @@
                 left: 5%;
             }
             .vertical-bar {
+                height: 6rem;
                 margin-right: 1rem;
             }
             .main-title {
@@ -318,6 +323,18 @@
             .video-container video {
                 width: 300px;
             }
+            .title-section-2 {
+                left: 5%;
+                top: 25%;
+                transform: translateY(-50%);
+            }
+            .video-container {
+                left: 5%;
+                right: 5%;
+                top: 60%;
+                transform: translateY(-50%);
+                gap: 1rem;
+            }
             .paper-title {
                 font-size: 1.6rem;
             }
@@ -335,6 +352,7 @@
             }
             .logos-section {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 1.5rem;
             }
             .logos-section img {
@@ -342,6 +360,9 @@
             }
             .logos-section img.logo-smaller {
                 height: 22px;
+            }
+            .logos-section img.logo-larger {
+                height: 30px;
             }
             .logo-separator {
                 display: none;
@@ -419,7 +440,7 @@
                 <div class="logo-separator"></div>
                 <img src="media/logos/cmu-wordmark-horizontal-w.png" alt="CMU" class="logo-smaller">
                 <div class="logo-separator"></div>
-                <img src="media/logos/cuhk_logo.png" alt="CUHK">
+                <img src="media/logos/cuhk_logo.png" alt="CUHK" class="logo-larger">
             </div>
         </div>
 
@@ -701,9 +722,7 @@
                 trigger: ".content",
                 start: "35% bottom",
                 end: "37% bottom",
-                scrub: true,
-                onEnter: () => { scrollIndicator.style.display = 'none'; },
-                onLeaveBack: () => { scrollIndicator.style.display = 'block'; }
+                scrub: true
             }
         });
 
@@ -814,6 +833,19 @@
                 start: "95% bottom",
                 end: "97% bottom",
                 scrub: true
+            }
+        });
+
+        // Scroll indicator fade out (95%-97% scroll) - hide when paper title section appears
+        gsap.to(scrollIndicator, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "95% bottom",
+                end: "97% bottom",
+                scrub: true,
+                onComplete: () => { scrollIndicator.style.display = 'none'; },
+                onReverseComplete: () => { scrollIndicator.style.display = 'block'; }
             }
         });
     </script>
