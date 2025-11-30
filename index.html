@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doorman Humanoid Research Demo</title>
+    <style>
+        @font-face {
+            font-family: 'NVIDIA Sans';
+            src: url('font/NVIDIASansVF_NALA_W_Wght.woff2') format('woff2');
+            font-weight: 100 900;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'NVIDIA Sans', 'Arial', sans-serif;
+            background: #000;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .background-canvas {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            width: 100vw;
+            height: auto;
+            max-height: 100vh;
+            object-fit: cover;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            height: 1600vh; /* Extended height for two video sequences */
+        }
+
+        .dark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .title-section {
+            position: fixed;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            text-align: left;
+            opacity: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .title-section-2 {
+            position: fixed;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            text-align: left;
+            opacity: 0;
+            z-index: 2;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .vertical-bar {
+            width: 10px;
+            height: 9rem;
+            background: #76b900;
+            margin-right: 2rem;
+        }
+
+        .title-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            z-index: 3;
+        }
+
+        .header-title {
+            position: fixed;
+            top: 2rem;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            z-index: 3;
+            color: white;
+        }
+
+        .header-left {
+            left: 3rem;
+        }
+
+        .header-right {
+            right: 3rem;
+        }
+
+        .video-container {
+            position: fixed;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 2;
+            opacity: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .video-container video {
+            width: 600px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .static-sections {
+            position: relative;
+            z-index: 2;
+            background: transparent;
+            padding: 100px 0;
+        }
+
+        .section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        .paper-title-section {
+            text-align: center;
+            padding: 120px 40px;
+        }
+
+        .paper-title {
+            font-size: 3rem;
+            font-weight: 400;
+            line-height: 1.4;
+            margin-bottom: 3rem;
+        }
+
+        .paper-title .doorman {
+            display: block;
+            color: #76b900;
+            font-size: 4rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .authors {
+            font-size: 1.1rem;
+            font-weight: 300;
+            line-height: 2;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            color: #76b900;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 2rem;
+        }
+
+        .placeholder-image {
+            width: 100%;
+            height: 400px;
+            background: #2a2a2a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+        }
+
+        .bibtex-section {
+            background: transparent;
+            padding: 80px 40px;
+        }
+
+        .bibtex-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .bibtex-code {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #76b900;
+            overflow-x: auto;
+        }
+
+        @media (max-width: 768px) {
+            .title-section {
+                left: 5%;
+            }
+            .vertical-bar {
+                margin-right: 1rem;
+            }
+            .main-title {
+                font-size: 2.5rem;
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .header-title {
+                font-size: 1rem;
+                top: 1.5rem;
+            }
+            .header-left {
+                left: 1.5rem;
+            }
+            .header-right {
+                right: 1.5rem;
+            }
+            .video-container video {
+                width: 300px;
+            }
+            .paper-title {
+                font-size: 1.8rem;
+            }
+            .paper-title .doorman {
+                font-size: 2.5rem;
+            }
+            .authors {
+                font-size: 0.9rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .section {
+                padding: 60px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="background-canvas" class="background-canvas"></canvas>
+
+    <div class="dark-overlay" id="dark-overlay"></div>
+
+    <div class="header-title header-left">DoorMan</div>
+    <div class="header-title header-right">NVIDIA GEAR Team</div>
+
+    <div class="content">
+        <div class="title-section" id="title-section">
+            <div class="vertical-bar"></div>
+            <div class="title-content">
+                <h1 class="main-title">Infinite Visual<br>Randomizations</h1>
+                <p class="subtitle">Powered by IsaacLab</p>
+            </div>
+        </div>
+        <div class="title-section-2" id="title-section-2">
+            <div class="vertical-bar"></div>
+            <div class="title-content">
+                <h1 class="main-title">Robust Policy<br>Transfer</h1>
+                <p class="subtitle">RGB Sim-to-Real</p>
+            </div>
+        </div>
+
+        <div class="video-container" id="video-container">
+            <video autoplay muted loop playsinline controls>
+                <source src="media/demos_loc_2/Door 1 Multi View.mp4" type="video/mp4">
+            </video>
+            <video autoplay muted loop playsinline controls>
+                <source src="media/demos_loc_2/Door 2 Multi View.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scroll-indicator">
+        Scroll to explore
+    </div>
+
+    <!-- Static Sections -->
+    <div class="static-sections">
+        <!-- Paper Title Section -->
+        <div class="paper-title-section">
+            <h1 class="paper-title">
+                <span class="doorman">DoorMan</span>
+                Opening the Sim-to-Real Door for Humanoid<br>Pixel-to-Action Policy Transfer
+            </h1>
+            <div class="authors">
+                Author One<sup>1</sup>, Author Two<sup>1</sup>, Author Three<sup>1</sup>, Author Four<sup>1</sup>, Author Five<sup>2</sup>,<br>
+                Author Six<sup>1</sup>, Author Seven<sup>1</sup>, Author Eight<sup>2</sup>, Author Nine<sup>1</sup>, Author Ten<sup>1</sup>,<br>
+                Author Eleven<sup>1</sup>, Author Twelve<sup>2</sup>, Author Thirteen<sup>1</sup>, Author Fourteen<sup>1</sup>, Author Fifteen<sup>1</sup>
+                <br><br>
+                <sup>1</sup>NVIDIA, <sup>2</sup>Partner Institution
+            </div>
+        </div>
+
+        <!-- Method Section -->
+        <div class="section">
+            <h2 class="section-title">Method</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+            </div>
+            <div class="placeholder-image">[Method Diagram Placeholder]</div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="section">
+            <h2 class="section-title">Results</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+            </div>
+            <div class="placeholder-image">[Results Chart Placeholder]</div>
+        </div>
+
+        <!-- Failure Cases Section -->
+        <div class="section">
+            <h2 class="section-title">Failure Cases</h2>
+            <div class="section-content">
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+            </div>
+            <div class="placeholder-image">[Failure Cases Video Placeholder]</div>
+        </div>
+    </div>
+
+    <!-- BibTeX Section -->
+    <div class="bibtex-section">
+        <div class="bibtex-container">
+            <h2 class="section-title">Citation</h2>
+            <pre class="bibtex-code">@article{doorman2024,
+  title={DoorMan: Opening the Sim-to-Real Door for Humanoid Pixel-to-Action Policy Transfer},
+  author={Author One and Author Two and Author Three and others},
+  journal={arXiv preprint arXiv:XXXX.XXXXX},
+  year={2024}
+}</pre>
+        </div>
+    </div>
+
+    <!-- GSAP CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <script>
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Get canvas and context
+        const canvas = document.getElementById('background-canvas');
+        const context = canvas.getContext('2d');
+        const titleSection = document.getElementById('title-section');
+        const titleSection2 = document.getElementById('title-section-2');
+        const scrollIndicator = document.getElementById('scroll-indicator');
+        const darkOverlay = document.getElementById('dark-overlay');
+        const videoContainer = document.getElementById('video-container');
+
+        // Set canvas size to 4K resolution
+        canvas.width = 3840;
+        canvas.height = 2160;
+
+        // First video sequence configuration (Pull Door)
+        const frameCount1 = 288; // Skip first 3 frames (288 - 3)
+        const frameOffset1 = 4; // Start from frame 4
+        const getFrame1 = index => {
+            const frameNum = index + frameOffset1;
+            return `media/frames_pull_door/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
+        };
+
+        // Second video sequence configuration (Push Door)
+        const frameCount2 = 278; // Skip first 3 frames (281 - 3)
+        const frameOffset2 = 4; // Start from frame 4
+        const getFrame2 = index => {
+            const frameNum = index + frameOffset2;
+            return `media/frames_push_door/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
+        };
+
+        // Load all images for both sequences
+        const images1 = [];
+        const images2 = [];
+        let imagesLoaded = false;
+
+        // Create loading promises for both sequences
+        const loadPromises = [];
+
+        for (let i = 0; i < frameCount1; i++) {
+            const img = new Image();
+            const promise = new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve; // Still resolve on error to not block
+            });
+            img.src = getFrame1(i);
+            images1.push(img);
+            loadPromises.push(promise);
+        }
+
+        for (let i = 0; i < frameCount2; i++) {
+            const img = new Image();
+            const promise = new Promise((resolve) => {
+                img.onload = resolve;
+                img.onerror = resolve; // Still resolve on error to not block
+            });
+            img.src = getFrame2(i);
+            images2.push(img);
+            loadPromises.push(promise);
+        }
+
+        const doorman = {
+            progress: 0
+        };
+
+        // Wait for all images to load before starting animation
+        Promise.all(loadPromises).then(() => {
+            console.log('All images loaded successfully');
+            imagesLoaded = true;
+            render(); // Initial render
+
+            // Single unified scroll animation
+            gsap.to(doorman, {
+                progress: 1,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".content",
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: 0.5
+                },
+                onUpdate: render
+            });
+        });
+
+        // Render function based on overall scroll progress
+        function render() {
+            if (!imagesLoaded) {
+                console.log('Images not loaded yet, skipping render');
+                return;
+            }
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            const p = doorman.progress;
+
+            // First sequence: 0-0.40 (plays video)
+            // Pause/hold: 0.40-0.48 (holds last frame of first video)
+            // Crossfade: 0.48-0.52 (crossfade between videos)
+            // Second sequence: 0.52-0.90 (plays second video)
+            // Hold: 0.90-1.0 (holds last frame of second video)
+
+            if (p <= 0.40) {
+                // Play first video
+                const frame = Math.round((p / 0.40) * (frameCount1 - 1));
+                context.globalAlpha = 1;
+                context.drawImage(images1[frame], 0, 0);
+            } else if (p > 0.40 && p <= 0.48) {
+                // Hold last frame of first video
+                context.globalAlpha = 1;
+                context.drawImage(images1[frameCount1 - 1], 0, 0);
+            } else if (p > 0.48 && p < 0.52) {
+                // Crossfade transition
+                const fadeProgress = (p - 0.48) / 0.04; // 0 to 1 over the transition
+                console.log(`Crossfade progress: ${p.toFixed(3)}, fade: ${fadeProgress.toFixed(3)}`);
+
+                // Draw first video last frame fading out
+                context.globalAlpha = 1 - fadeProgress;
+                context.drawImage(images1[frameCount1 - 1], 0, 0);
+
+                // Draw second video first frame fading in
+                context.globalAlpha = fadeProgress;
+                context.drawImage(images2[0], 0, 0);
+
+                context.globalAlpha = 1;
+            } else if (p >= 0.52 && p <= 0.90) {
+                // Play second video
+                const frame = Math.round(((p - 0.52) / 0.38) * (frameCount2 - 1));
+                context.globalAlpha = 1;
+                context.drawImage(images2[frame], 0, 0);
+            } else {
+                // Hold last frame of second video
+                context.globalAlpha = 1;
+                context.drawImage(images2[frameCount2 - 1], 0, 0);
+            }
+        }
+
+        /* ---------------------------------- */
+        /* Title and Overlay Animations */
+
+        // Set initial states
+        gsap.set(darkOverlay, { opacity: 0 });
+        gsap.set(titleSection, { opacity: 0 });
+        gsap.set(titleSection2, { opacity: 0 });
+        gsap.set(videoContainer, { opacity: 0 });
+        gsap.set("#title-section .main-title", { x: -30, opacity: 0 });
+        gsap.set("#title-section .subtitle", { x: -20, opacity: 0 });
+        gsap.set("#title-section-2 .main-title", { x: -30, opacity: 0 });
+        gsap.set("#title-section-2 .subtitle", { x: -20, opacity: 0 });
+
+        // First title section fade in (35%-37% scroll)
+        gsap.to(titleSection, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true,
+                onEnter: () => { scrollIndicator.style.display = 'none'; },
+                onLeaveBack: () => { scrollIndicator.style.display = 'block'; }
+            }
+        });
+
+        gsap.to("#title-section .main-title", {
+            x: 0,
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section .subtitle", {
+            x: 0,
+            opacity: 0.9,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "35% bottom",
+                end: "37% bottom",
+                scrub: true
+            }
+        });
+
+        // First title section fade out (43%-45% scroll)
+        gsap.to(titleSection, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "43% top",
+                end: "45% top",
+                scrub: true
+            }
+        });
+
+        // Second overlay fade in (85%-87% scroll)
+        gsap.to(darkOverlay, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Second title section fade in (85%-87% scroll)
+        gsap.to(titleSection2, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section-2 .main-title", {
+            x: 0,
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        gsap.to("#title-section-2 .subtitle", {
+            x: 0,
+            opacity: 0.9,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Video container fade in (85%-87% scroll) - same timing as title-section-2
+        gsap.to(videoContainer, {
+            opacity: 1,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "85% bottom",
+                end: "87% bottom",
+                scrub: true
+            }
+        });
+
+        // Second title section fade out (93%-95% scroll)
+        gsap.to(titleSection2, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "93% top",
+                end: "95% top",
+                scrub: true
+            }
+        });
+
+        // Video container fade out (93%-95% scroll)
+        gsap.to(videoContainer, {
+            opacity: 0,
+            scrollTrigger: {
+                trigger: ".content",
+                start: "93% top",
+                end: "95% top",
+                scrub: true
+            }
+        });
+    </script>
+</body>
+</html>
