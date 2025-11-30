@@ -476,23 +476,42 @@
         const darkOverlay = document.getElementById('dark-overlay');
         const videoContainer = document.getElementById('video-container');
 
-        // Set canvas size to 4K resolution
-        canvas.width = 3840;
-        canvas.height = 2160;
+        // Set canvas size to match viewport with device pixel ratio for sharp rendering
+        // Cap at 2x to balance quality and performance
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = window.innerWidth * dpr;
+        canvas.height = window.innerHeight * dpr;
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const dpr = Math.min(window.devicePixelRatio || 1, 2);
+                canvas.width = window.innerWidth * dpr;
+                canvas.height = window.innerHeight * dpr;
+                canvas.style.width = window.innerWidth + 'px';
+                canvas.style.height = window.innerHeight + 'px';
+                render(); // Re-render at new size
+            }, 250); // Debounce resize events
+        });
 
         // First video sequence configuration (Pull Door)
-        const frameCount1 = 288; // Skip first 3 frames (288 - 3)
+        const subsampleFactor = 2; // Load every 2nd frame for performance
+        const frameCount1 = Math.floor(288 / subsampleFactor); // Subsampled frame count
         const frameOffset1 = 4; // Start from frame 4
         const getFrame1 = index => {
-            const frameNum = index + frameOffset1;
+            const frameNum = (index * subsampleFactor) + frameOffset1;
             return `media/frames_pull_door/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
         };
 
         // Second video sequence configuration (Push Door)
-        const frameCount2 = 278; // Skip first 3 frames (281 - 3)
+        const frameCount2 = Math.floor(278 / subsampleFactor); // Subsampled frame count
         const frameOffset2 = 4; // Start from frame 4
         const getFrame2 = index => {
-            const frameNum = index + frameOffset2;
+            const frameNum = (index * subsampleFactor) + frameOffset2;
             return `media/frames_push_door/frame_${frameNum.toString().padStart(4, '0')}.jpg`;
         };
 
@@ -550,6 +569,28 @@
             });
         });
 
+        // Helper function to draw image covering the entire canvas (like CSS background-size: cover)
+        function drawImageCover(img) {
+            const imgRatio = img.width / img.height;
+            const canvasRatio = canvas.width / canvas.height;
+
+            let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+
+            if (imgRatio > canvasRatio) {
+                // Image is wider than canvas
+                drawHeight = canvas.height;
+                drawWidth = img.width * (canvas.height / img.height);
+                offsetX = (canvas.width - drawWidth) / 2;
+            } else {
+                // Image is taller than canvas
+                drawWidth = canvas.width;
+                drawHeight = img.height * (canvas.width / img.width);
+                offsetY = (canvas.height - drawHeight) / 2;
+            }
+
+            context.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        }
+
         // Render function based on overall scroll progress
         function render() {
             if (!imagesLoaded) {
@@ -571,11 +612,11 @@
                 // Play first video
                 const frame = Math.round((p / 0.40) * (frameCount1 - 1));
                 context.globalAlpha = 1;
-                context.drawImage(images1[frame], 0, 0);
+                drawImageCover(images1[frame]);
             } else if (p > 0.40 && p <= 0.48) {
                 // Hold last frame of first video
                 context.globalAlpha = 1;
-                context.drawImage(images1[frameCount1 - 1], 0, 0);
+                drawImageCover(images1[frameCount1 - 1]);
             } else if (p > 0.48 && p < 0.52) {
                 // Crossfade transition
                 const fadeProgress = (p - 0.48) / 0.04; // 0 to 1 over the transition
@@ -583,22 +624,22 @@
 
                 // Draw first video last frame fading out
                 context.globalAlpha = 1 - fadeProgress;
-                context.drawImage(images1[frameCount1 - 1], 0, 0);
+                drawImageCover(images1[frameCount1 - 1]);
 
                 // Draw second video first frame fading in
                 context.globalAlpha = fadeProgress;
-                context.drawImage(images2[0], 0, 0);
+                drawImageCover(images2[0]);
 
                 context.globalAlpha = 1;
             } else if (p >= 0.52 && p <= 0.90) {
                 // Play second video
                 const frame = Math.round(((p - 0.52) / 0.38) * (frameCount2 - 1));
                 context.globalAlpha = 1;
-                context.drawImage(images2[frame], 0, 0);
+                drawImageCover(images2[frame]);
             } else {
                 // Hold last frame of second video
                 context.globalAlpha = 1;
-                context.drawImage(images2[frameCount2 - 1], 0, 0);
+                drawImageCover(images2[frameCount2 - 1]);
             }
         }
 
