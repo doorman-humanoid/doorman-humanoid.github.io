@@ -40,7 +40,7 @@
         .content {
             position: relative;
             z-index: 1;
-            height: 1600vh; /* Extended height for two video sequences */
+            height: 1000vh; /* Extended height for two video sequences */
         }
 
         .dark-overlay {
@@ -157,7 +157,7 @@
             position: relative;
             z-index: 2;
             background: transparent;
-            padding: 100px 0;
+            padding: 20px 0;
         }
 
         .section {
@@ -167,32 +167,74 @@
         }
 
         .paper-title-section {
-            text-align: center;
-            padding: 120px 40px;
+            text-align: left;
+            padding: 96px 32px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
         .paper-title {
-            font-size: 3rem;
+            font-size: 2.7rem;
             font-weight: 400;
             line-height: 1.4;
-            margin-bottom: 3rem;
+            margin-bottom: 2.4rem;
         }
 
         .paper-title .doorman {
             display: block;
             color: #76b900;
-            font-size: 4rem;
+            font-size: 3.6rem;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
         }
 
         .authors {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 300;
             line-height: 2;
             color: rgba(255, 255, 255, 0.8);
-            max-width: 900px;
-            margin: 0 auto;
+            max-width: 720px;
+        }
+
+        .authors a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .authors a:hover {
+            color: #76b900;
+            text-decoration: underline;
+        }
+
+        .logos-section {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 2rem;
+            margin-top: 2.4rem;
+        }
+
+        .logo-separator {
+            width: 1px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .logos-section img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .logos-section img:hover {
+            opacity: 1;
+        }
+
+        .logos-section img.logo-smaller {
+            height: 32px;
         }
 
         .section-title {
@@ -270,19 +312,32 @@
                 width: 300px;
             }
             .paper-title {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
             .paper-title .doorman {
-                font-size: 2.5rem;
+                font-size: 2.3rem;
             }
             .authors {
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
             .section-title {
                 font-size: 1.8rem;
             }
             .section {
                 padding: 60px 20px;
+            }
+            .logos-section {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            .logos-section img {
+                height: 28px;
+            }
+            .logos-section img.logo-smaller {
+                height: 22px;
+            }
+            .logo-separator {
+                display: none;
             }
         }
     </style>
@@ -331,14 +386,33 @@
         <div class="paper-title-section">
             <h1 class="paper-title">
                 <span class="doorman">DoorMan</span>
-                Opening the Sim-to-Real Door for Humanoid<br>Pixel-to-Action Policy Transfer
+                Opening the Sim-to-Real Door for<br>Humanoid Pixel-to-Action Policy Transfer
             </h1>
             <div class="authors">
-                Author One<sup>1</sup>, Author Two<sup>1</sup>, Author Three<sup>1</sup>, Author Four<sup>1</sup>, Author Five<sup>2</sup>,<br>
-                Author Six<sup>1</sup>, Author Seven<sup>1</sup>, Author Eight<sup>2</sup>, Author Nine<sup>1</sup>, Author Ten<sup>1</sup>,<br>
-                Author Eleven<sup>1</sup>, Author Twelve<sup>2</sup>, Author Thirteen<sup>1</sup>, Author Fourteen<sup>1</sup>, Author Fifteen<sup>1</sup>
+                <a href="https://haoruxue.github.io/">Haoru Xue</a><sup>1,2,*</sup>,
+                <a href="https://tairanhe.com/">Tairan He</a><sup>1,3,*</sup>,
+                <a href="https://ziwang1105.github.io/">Zi Wang</a><sup>1,*</sup>,
+                <a href="https://www.qingweiben.com/">Qingwei Ben</a><sup>1,4,*</sup>,<br>
+                <a href="https://www.wenlixiao.com/">Wenli Xiao</a><sup>1,3</sup>,
+                <a href="https://www.zhengyiluo.com/">Zhengyi Luo</a><sup>1</sup>,
+                <a href="https://www.linkedin.com/in/xingye-dennis-da-86242655/">Xingye Da</a><sup>1</sup>,
+                <a href="https://scholar.google.com/citations?user=U9WUBC4AAAAJ&hl=es">Fernando Castañeda</a><sup>1</sup>,<br>
+                <a href="https://www.gshi.me/">Guanya Shi</a><sup>3</sup>,
+                <a href="https://people.eecs.berkeley.edu/~sastry/">Shankar Sastry</a><sup>2</sup>,
+                <a href="https://jimfan.me/">Linxi "Jim" Fan</a><sup>1,†</sup>,
+                <a href="https://yukezhu.me/">Yuke Zhu</a><sup>1,†</sup>
                 <br><br>
-                <sup>1</sup>NVIDIA, <sup>2</sup>Partner Institution
+                <sup>1</sup>NVIDIA, <sup>2</sup>UC Berkeley, <sup>3</sup>CMU, <sup>4</sup>CUHK<br>
+                <sup>*</sup>Equal Contribution, <sup>†</sup>Project Leads
+            </div>
+            <div class="logos-section">
+                <img src="media/logos/nvidia_logo.png" alt="NVIDIA" class="logo-smaller">
+                <div class="logo-separator"></div>
+                <img src="media/logos/uc_berkeley_logo.png" alt="UC Berkeley" class="logo-smaller">
+                <div class="logo-separator"></div>
+                <img src="media/logos/cmu-wordmark-horizontal-w.png" alt="CMU" class="logo-smaller">
+                <div class="logo-separator"></div>
+                <img src="media/logos/cuhk_logo.png" alt="CUHK">
             </div>
         </div>
 
@@ -642,24 +716,24 @@
             }
         });
 
-        // Second title section fade out (93%-95% scroll)
+        // Second title section fade out (95%-97% scroll)
         gsap.to(titleSection2, {
             opacity: 0,
             scrollTrigger: {
                 trigger: ".content",
-                start: "93% top",
-                end: "95% top",
+                start: "95% bottom",
+                end: "97% bottom",
                 scrub: true
             }
         });
 
-        // Video container fade out (93%-95% scroll)
+        // Video container fade out (95%-97% scroll)
         gsap.to(videoContainer, {
             opacity: 0,
             scrollTrigger: {
                 trigger: ".content",
-                start: "93% top",
-                end: "95% top",
+                start: "95% bottom",
+                end: "97% bottom",
                 scrub: true
             }
         });
