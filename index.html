@@ -23,22 +23,27 @@
             background: #000;
             color: white;
             overflow-x: hidden;
+            margin: 0;
+            min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .background-canvas {
             position: fixed;
             top: 0;
             left: 0;
+            bottom: 0;
+            right: 0;
             z-index: -1;
             width: 100vw;
             height: 100vh;
-            /* Prevent resize when mobile browser chrome hides/shows */
-            height: 100svh; /* Use small viewport height on supporting browsers */
+            /* Use dynamic viewport height to adapt when browser chrome hides/shows */
+            height: 100dvh; /* Dynamic viewport height - expands when chrome hides */
             object-fit: cover;
         }
 
-        @supports (-webkit-touch-callout: none) {
-            /* iOS specific: use -webkit-fill-available */
+        @supports (-webkit-touch-callout: none) and (not (height: 100dvh)) {
+            /* Fallback for older iOS that doesn't support dvh */
             .background-canvas {
                 height: -webkit-fill-available;
             }
@@ -54,8 +59,11 @@
             position: fixed;
             top: 0;
             left: 0;
+            bottom: 0;
+            right: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            height: 100dvh;
             background: rgba(0, 0, 0, 0.3);
             opacity: 0;
             z-index: 1;
@@ -719,6 +727,9 @@
             .section {
                 padding: 40px 20px;
             }
+            .bibtex-section {
+                padding: 40px 20px;
+            }
             .logos-section {
                 flex-direction: column;
                 align-items: flex-start;
@@ -1160,9 +1171,8 @@
         // Detect mobile device
         const isMobile = window.innerWidth <= 768;
 
-        // On mobile, capture initial viewport height to prevent resize when browser chrome hides/shows
-        const initialHeight = window.innerHeight;
-        const viewportHeight = isMobile ? initialHeight : window.innerHeight;
+        // Use current viewport height (dvh in CSS will handle dynamic resizing)
+        const viewportHeight = window.innerHeight;
 
         // Set canvas size to match viewport with device pixel ratio for sharp rendering
         // Use 1x DPR on mobile to reduce memory, 2x max on desktop
@@ -1175,8 +1185,12 @@
 
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.width = window.innerWidth + 'px';
-        canvas.style.height = viewportHeight + 'px';
+
+        // On mobile, let CSS dvh handle the sizing. On desktop, set explicit dimensions.
+        if (!isMobile) {
+            canvas.style.width = window.innerWidth + 'px';
+            canvas.style.height = viewportHeight + 'px';
+        }
 
         // Handle window resize
         let resizeTimeout;
@@ -1186,6 +1200,7 @@
             clearTimeout(resizeTimeout);
             resizeTimeout = setTimeout(() => {
                 const currentWidth = window.innerWidth;
+                const currentHeight = window.innerHeight;
                 const isMobile = currentWidth <= 768;
 
                 // On mobile, only resize if width changed (rotation), ignore height changes (browser chrome)
@@ -1195,16 +1210,20 @@
 
                 lastWidth = currentWidth;
 
-                const viewportHeight = isMobile ? initialHeight : window.innerHeight;
                 const dpr = isMobile ? 1 : Math.min(window.devicePixelRatio || 1, 2);
                 const maxDimension = isMobile ? 1920 : 3840;
                 const canvasWidth = Math.min(currentWidth * dpr, maxDimension);
-                const canvasHeight = Math.min(viewportHeight * dpr, maxDimension);
+                const canvasHeight = Math.min(currentHeight * dpr, maxDimension);
 
                 canvas.width = canvasWidth;
                 canvas.height = canvasHeight;
-                canvas.style.width = currentWidth + 'px';
-                canvas.style.height = viewportHeight + 'px';
+
+                // On mobile, let CSS dvh handle the sizing. On desktop, set explicit dimensions.
+                if (!isMobile) {
+                    canvas.style.width = currentWidth + 'px';
+                    canvas.style.height = currentHeight + 'px';
+                }
+
                 render(); // Re-render at new size
             }, 250); // Debounce resize events
         });
