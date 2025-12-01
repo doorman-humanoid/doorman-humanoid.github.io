@@ -1,0 +1,37 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <g class="copy-icon" clip-path="url(#clip0_1969_665)">
+        <!-- Left "file" -->
+        <path d="M11.5 12.8V26.5H25.5V7.5H16.8L11.5 12.8ZM16.5 9.2V12.5H13.2L16.5 9.2ZM24.5 25.5H12.5V13.5H17.5V8.5H24.5V25.5Z" fill="white"/>
+
+        <!-- Left-side bars -->
+        <path d="M10.5 14.5H9.5V28.5H23.5V27.5H10.5V14.5Z" fill="white"/>
+        <path d="M21.5 29.5H8.5V16.5H7.5V30.5H21.5V29.5Z" fill="white"/>
+
+        <!-- Left file lines -->
+        <path d="M22.5 15.5H14.5V16.5H22.5V15.5Z" fill="white"/>
+        <path d="M22.5 18.5H14.5V19.5H22.5V18.5Z" fill="white"/>
+        <path d="M18.5 21.5H14.5V22.5H18.5V21.5Z" fill="white"/>
+
+        <!-- Right "file" - grouped for animation -->
+        <g class="right-file">
+            <path d="M31.8 21.5L26.5 26.8V40.5H40.5V21.5H31.8ZM31.5 23.2V26.5H28.2L31.5 23.2ZM39.5 39.5H27.5V27.5H32.5V22.5H39.5V39.5Z" fill="white"/>
+
+            <!-- Right file lines -->
+            <path d="M37.5 29.5H29.5V30.5H37.5V29.5Z" fill="white"/>
+            <path d="M37.5 32.5H29.5V33.5H37.5V32.5Z" fill="white"/>
+            <path d="M33.5 35.5H29.5V36.5H33.5V35.5Z" fill="white"/>
+        </g>
+
+        <!-- Arrows (not animated) -->
+        <path d="M32.5 17.8L31 16.3V17.7L33 19.7L35 17.7V16.3L33.5 17.8V13.5H27.5V14.5H32.5V17.8Z"
+              fill="white"/>
+        <path d="M18.3 35L19.8 36.5H16.5V31.5H15.5V37.5H19.8L18.3 39H19.7L21.7 37L19.7 35H18.3Z"
+              fill="white"/>
+    </g>
+
+    <defs>
+        <clipPath id="clip0_1969_665">
+            <rect width="48" height="48" fill="none"/>
+        </clipPath>
+    </defs>
+</svg>

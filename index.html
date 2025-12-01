@@ -255,6 +255,70 @@
             color: #76b900;
         }
 
+        .bootstrap-text {
+            display: inline-block;
+            position: relative;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateX(-20px);
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
+            margin-left: 0.15em;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .bootstrap-text::before {
+            content: 'Bootstrap';
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
+        }
+
+        .bootstrap-text.glitch::before {
+            animation: glitch 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both, gradientShift 4s ease infinite;
+        }
+
+        @keyframes glitch {
+            0%, 100% {
+                transform: translate(0);
+                opacity: 0;
+            }
+            20% {
+                transform: translate(-2px, 2px);
+                opacity: 0.8;
+            }
+            40% {
+                transform: translate(2px, -2px);
+                opacity: 0.8;
+            }
+            60% {
+                transform: translate(-2px, -2px);
+                opacity: 0.8;
+            }
+            80% {
+                transform: translate(2px, 2px);
+                opacity: 0.8;
+            }
+        }
+
         .section-content {
             font-size: 1.1rem;
             line-height: 1.8;
@@ -272,6 +336,98 @@
             justify-content: center;
             color: rgba(255, 255, 255, 0.3);
             font-size: 1.2rem;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .video-grid video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tsb-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-top: 3rem;
+        }
+
+        .tsb-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .tsb-item:has(.icon-container) {
+            flex: 0 0 80px;
+        }
+
+        .tsb-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .tsb-label {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.75);
+            text-align: center;
+            line-height: 1.4;
+            max-width: 200px;
+        }
+
+        .placeholder-figure {
+            min-height: 300px;
+            width: 100%;
+            background: #2a2a2a;
+            border-radius: 8px;
+            color: rgba(255, 255, 255, 0.3);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tsb-video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .tsb-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: #2a2a2a;
+            border-radius: 8px;
+            border: 2px dashed rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-container {
+            flex: 0 0 auto;
+        }
+
+        .icon-container svg,
+        .icon-container img {
+            width: 64px;
+            height: 64px;
+        }
+
+        .beaker-icon {
+            transform-box: fill-box;
+            transform-origin: 50% 20%;
         }
 
         .bibtex-section {
@@ -367,6 +523,27 @@
             .logo-separator {
                 display: none;
             }
+            .video-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .tsb-flow {
+                flex-direction: column;
+                gap: 3rem;
+            }
+            .placeholder-figure {
+                min-height: 200px;
+                width: 100%;
+            }
+            .icon-container svg,
+            .icon-container img {
+                width: 48px;
+                height: 48px;
+            }
+            .tsb-label {
+                font-size: 0.85rem;
+                max-width: 100%;
+            }
         }
     </style>
 </head>
@@ -446,22 +623,84 @@
 
         <!-- Method Section -->
         <div class="section">
-            <h2 class="section-title">Method</h2>
+            <h2 class="section-title">Mass Scale Simulation Randomization</h2>
             <div class="section-content">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.</p>
+                <p>We use a procedural generation pipeline that randomizes physical and visual properties of articulated objects: mass, handle type, hinge damping, stiffness, texture, background, etc.</p>
             </div>
-            <div class="placeholder-image">[Method Diagram Placeholder]</div>
+            <div class="video-grid">
+                <video autoplay muted loop playsinline>
+                    <source src="media/sim/Sim Doors.mp4" type="video/mp4">
+                </video>
+                <video autoplay muted loop playsinline>
+                    <source src="media/sim/doors_1080.mp4" type="video/mp4">
+                </video>
+            </div>
         </div>
 
         <!-- Result Section -->
-        <div class="section">
-            <h2 class="section-title">Results</h2>
+        <div class="section" id="results-section">
+            <h2 class="section-title">Teacher-Student-<span class="bootstrap-text">Bootstrap</span></h2>
             <div class="section-content">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p>We apply GRPO fine-tuning to bootstrap the student on top of classical teacher-student distillation. We find this stage to be uniquely useful for challenging loco-manipulation tasks due to partial observability. The reward is mostly binary on the task success criteria. The result: 20-30% success rate improvement.</p>
             </div>
-            <div class="placeholder-image">[Results Chart Placeholder]</div>
+            <div class="tsb-flow">
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <video class="tsb-video" autoplay muted loop playsinline>
+                            <source src="media/pull_solid_door_no_texture_fixed_cam_exported.mp4" type="video/mp4">
+                        </video>
+                        <div class="tsb-label">Phase 1: Train privileged teacher with PPO</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="icon-container" id="beaker-icon">
+                            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <g class="beaker-icon">
+                                    <!-- Hollow white bubbles -->
+                                    <circle class="bubble" cx="17" cy="31" r="1.2" stroke="white" stroke-width="1" fill="none" />
+                                    <circle class="bubble" cx="19" cy="27" r="1.2" stroke="white" stroke-width="1" fill="none" />
+                                    <circle class="bubble" cx="21" cy="34" r="1.2" stroke="white" stroke-width="1" fill="none" />
+
+                                    <!-- Main beaker path in white -->
+                                    <g clip-path="url(#clip0_24_403)">
+                                        <path d="M23.499 11.5H24.999V8.5H15.5V11.5H17L16.999 20.8594L8.38525 34.9453L9.61475 39.5H30.3828L31.6104 34.9531L23.5 20.8662L23.499 11.5ZM16.5 10.5V9.5H23.999V10.5H22.499L22.4997 17.5H17.9993L18 10.5H16.5ZM29.6172 38.5H10.3804L9.46237 35.1001L17.999 21.1406L17.9993 18.5H22.4998L22.5 21.1338L24.4382 24.5H22.5V25.5H25.0139L26.1655 27.5H23.5V28.5H26.7412L27.8928 30.5H24.5V31.5H28.4685L29.6201 33.5H25.5V34.5H30.1958L30.5371 35.0928L29.6172 38.5ZM39.5 13.5V10.5H32.5V13.5H33.5L33.499 35C33.499 35.6632 33.7624 36.2992 34.2314 36.7681C34.7003 37.2371 35.3363 37.5005 35.9995 37.5005C36.6627 37.5005 37.2987 37.2371 37.7676 36.7681C38.2366 36.2992 38.5 35.6632 38.5 35V34.5V33.5L38.4998 31.5H38.5V30.5H38.4998V28.5H38.5V27.5H38.4996L38.4995 25.5H38.5V24.5H38.4995V22.5H38.5V21.5H38.4994L38.4993 19.5H38.5V18.5H38.4993L38.4992 16.5H38.5V15.5H38.499V13.5H39.5ZM37.4993 16.5V18.5H36.5V19.5H37.4993L37.4994 21.5H36.5V22.5H37.4995V24.5H36.5V25.5H37.4995L37.4998 27.5H36.5V28.5H37.4998V30.5H36.5V31.5H37.4999L37.5 33.5H36.5V34.5H37.5V35C37.5 35.398 37.3419 35.7796 37.0605 36.061C36.7791 36.3424 36.3975 36.5005 35.9995 36.5005C35.6015 36.5005 35.2199 36.3424 34.9385 36.061C34.6571 35.7796 34.499 35.398 34.499 35L34.5 12.5H33.5V11.5H38.5V12.5H37.499L37.4991 15.5H36.5V16.5H37.4993Z" fill="white"/>
+                                    </g>
+                                </g>
+
+                                <defs>
+                                    <clipPath id="clip0_24_403">
+                                        <rect width="48" height="48" fill="none"/>
+                                    </clipPath>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="tsb-label">Distill</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <video class="tsb-video" autoplay muted loop playsinline>
+                            <source src="media/Sim Pull Open Door Fixed Angle.mp4" type="video/mp4">
+                        </video>
+                        <div class="tsb-label">Phase 2: Distill onto vision student with DAgger</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="icon-container" id="copy-icon">
+                            <img src="media/icons/copy.svg" alt="Copy icon">
+                        </div>
+                        <div class="tsb-label">Copy initialize</div>
+                    </div>
+                </div>
+                <div class="tsb-item">
+                    <div class="tsb-content">
+                        <div class="tsb-placeholder"></div>
+                        <div class="tsb-label">Phase 3: Fine-tune student with GRPO</div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Failure Cases Section -->
@@ -848,6 +1087,132 @@
                 onReverseComplete: () => { scrollIndicator.style.display = 'block'; }
             }
         });
+
+        // Bootstrap text animation - slide in with glitch and gradient
+        const bootstrapText = document.querySelector('.bootstrap-text');
+
+        // Initial slide-in animation with glitch effect when section comes into view
+        gsap.to(bootstrapText, {
+            opacity: 1,
+            x: 0,
+            duration: 0.8,
+            ease: "back.out(1.2)",
+            scrollTrigger: {
+                trigger: "#results-section",
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+                onEnter: () => {
+                    // Trigger glitch effect on entry
+                    bootstrapText.classList.add('glitch');
+                    setTimeout(() => {
+                        bootstrapText.classList.remove('glitch');
+                    }, 300);
+                }
+            },
+            onComplete: () => {
+                bootstrapText.classList.add('highlight');
+                // Subtle pulse effect to keep drawing attention
+                gsap.to(bootstrapText, {
+                    scale: 1.08,
+                    duration: 2,
+                    ease: "sine.inOut",
+                    yoyo: true,
+                    repeat: -1
+                });
+            }
+        });
+
+        // ========================================
+        // Beaker Icon Animations
+        // ========================================
+
+        // Bubble jitter animation - subtle continuous boiling effect
+        gsap.to("#beaker-icon .bubble", {
+            x: "random(-0.7, 0.7)",
+            y: "random(-0.7, 0.7)",
+            duration: 0.3,
+            yoyo: true,
+            repeat: -1,
+            ease: "sine.inOut",
+            stagger: {
+                each: 0.1,
+                repeat: -1,
+                yoyo: true
+            }
+        });
+
+        // Realistic beaker shake animation - simulates hand shaking (slowed to 0.5x speed)
+        const distillShake = gsap.timeline({
+            repeat: -1,
+            repeatDelay: 0.6,
+            paused: false,  // Auto-start
+            defaults: { ease: "power2.inOut" }
+        });
+
+        distillShake
+            .to("#beaker-icon .beaker-icon", { rotation: -3, x: -0.8, duration: 0.12 })
+            .to("#beaker-icon .beaker-icon", { rotation: 4,  x:  1.0, duration: 0.12 })
+            .to("#beaker-icon .beaker-icon", { rotation: -2, x: -0.6, duration: 0.10 })
+            .to("#beaker-icon .beaker-icon", { rotation: 2,  x:  0.4, duration: 0.10 })
+            .to("#beaker-icon .beaker-icon", { rotation: 0,  x:  0,   duration: 0.36, ease: "power3.out" });
+
+        // Optional: API to control distillation animation
+        window.beakerAnimation = {
+            start: () => distillShake.play(),
+            stop: () => distillShake.pause(0)
+        };
+
+        // ========================================
+        // Copy Icon File Translation Animation
+        // ========================================
+
+        // Load external SVG inline so we can animate it
+        const copyIconContainer = document.querySelector("#copy-icon");
+        const copyIconImg = copyIconContainer ? copyIconContainer.querySelector("img") : null;
+
+        if (copyIconImg) {
+            fetch(copyIconImg.src)
+                .then(response => response.text())
+                .then(svgContent => {
+                    copyIconImg.outerHTML = svgContent;
+
+                    // Now animate the right file being copied from left file position
+                    const rightFile = document.querySelector("#copy-icon .right-file");
+
+                    if (rightFile) {
+                        // Create a looping timeline
+                        const copyTimeline = gsap.timeline({
+                            repeat: -1,
+                            repeatDelay: 0.5
+                        });
+
+                        copyTimeline
+                            // Start at left file position (translate left by ~15px, up by ~14px)
+                            .set(rightFile, { x: -15, y: -14, opacity: 0.3 })
+                            // Fade in and move to final position
+                            .to(rightFile, {
+                                x: 0,
+                                y: 0,
+                                opacity: 1,
+                                duration: 1,
+                                ease: "power2.out"
+                            })
+                            // Hold at final position
+                            .to(rightFile, {
+                                duration: 0.8
+                            });
+
+                        // Optional: API to control copy animation
+                        window.copyFlowAnimation = {
+                            start: () => copyTimeline.play(),
+                            stop: () => {
+                                copyTimeline.pause();
+                                gsap.set(rightFile, { x: 0, y: 0, opacity: 1 });
+                            }
+                        };
+                    }
+                });
+        }
     </script>
 </body>
 </html>
