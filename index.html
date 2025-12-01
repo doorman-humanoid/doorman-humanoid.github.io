@@ -1453,35 +1453,164 @@
                 pushbar: "Push Door w/ Push-Bar"
             };
 
-            // Prepare data for each line
-            const lines = ['push', 'pull', 'pushbar'].map(key => ({
+            // Prepare data for each line (in reverse order so darkest is drawn first)
+            const lines = ['pushbar', 'pull', 'push'].map(key => ({
                 name: key,
                 color: lineColors[key],
                 label: lineLabels[key],
                 values: subsampledData.map(d => ({Step: d.Step, value: d[key]}))
             }));
 
+            // Create gradient definitions for laser effect
+            const defs = svg.append("defs");
+
+            // Create glow filter for laser effect
+            const filter = defs.append("filter")
+                .attr("id", "glow")
+                .attr("x", "-50%")
+                .attr("y", "-50%")
+                .attr("width", "200%")
+                .attr("height", "200%");
+
+            filter.append("feGaussianBlur")
+                .attr("stdDeviation", "2")
+                .attr("result", "coloredBlur");
+
+            const feMerge = filter.append("feMerge");
+            feMerge.append("feMergeNode").attr("in", "coloredBlur");
+            feMerge.append("feMergeNode").attr("in", "SourceGraphic");
+
+            // Store references for coordinated hover effects
+            const lineElements = {};
+
             // Draw lines with animation
             lines.forEach((lineData, i) => {
+                // Create gradient for this line - from original color to white
+                const gradientId = `gradient-${lineData.name}`;
+                const gradient = defs.append("linearGradient")
+                    .attr("id", gradientId)
+                    .attr("x1", "0%")
+                    .attr("y1", "0%")
+                    .attr("x2", "100%")
+                    .attr("y2", "0%");
+
+                gradient.append("stop")
+                    .attr("offset", "0%")
+                    .attr("stop-color", lineData.color)
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "95%")
+                    .attr("stop-color", lineData.color)
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "98%")
+                    .attr("stop-color", "#ffffff")
+                    .attr("stop-opacity", 1);
+
+                gradient.append("stop")
+                    .attr("offset", "100%")
+                    .attr("stop-color", "#ffffff")
+                    .attr("stop-opacity", 1);
+
+                // Create invisible wider hit area for easier hovering
+                const hitArea = svg.append("path")
+                    .datum(lineData.values)
+                    .attr("fill", "none")
+                    .attr("stroke", "transparent")
+                    .attr("stroke-width", 15)
+                    .attr("d", line)
+                    .style("cursor", "pointer");
+
                 const path = svg.append("path")
                     .datum(lineData.values)
                     .attr("fill", "none")
-                    .attr("stroke", lineData.color)
-                    .attr("stroke-width", 2)
-                    .attr("d", line);
+                    .attr("stroke", `url(#${gradientId})`)
+                    .attr("stroke-width", 3)
+                    .attr("filter", "url(#glow)")
+                    .attr("d", line)
+                    .style("pointer-events", "none"); // Let hit area handle mouse events
+
+                // Store path reference
+                lineElements[lineData.name] = { path: path, hitArea: hitArea };
 
                 // Get total length for animation
                 const totalLength = path.node().getTotalLength();
 
-                // Animate drawing from left to right
+                // Animate drawing from left to right with gradient
+                // Reverse delay so animation still goes 1-2-3 visually
+                const reverseIndex = lines.length - 1 - i;
                 path
                     .attr("stroke-dasharray", totalLength + " " + totalLength)
                     .attr("stroke-dashoffset", totalLength)
                     .transition()
                     .duration(2000)
-                    .delay(i * 200) // Stagger each line slightly
+                    .delay(reverseIndex * 200) // Stagger each line slightly
                     .ease(d3.easeLinear)
-                    .attr("stroke-dashoffset", 0);
+                    .attr("stroke-dashoffset", 0)
+                    .on("end", function() {
+                        const pathElement = d3.select(this);
+                        // After animation completes, switch to solid color and remove glow
+                        pathElement
+                            .transition()
+                            .duration(300)
+                            .attr("stroke", lineData.color)
+                            .attr("stroke-width", 2)
+                            .attr("filter", null);
+
+                        // Add hover effects to hit area after animation completes
+                        const hitAreaElement = lineElements[lineData.name].hitArea;
+                        hitAreaElement
+                            .on("mouseenter", function() {
+                                // Highlight path
+                                pathElement
+                                    .transition()
+                                    .duration(200)
+                                    .attr("stroke-width", 3)
+                                    .attr("filter", "url(#glow)");
+
+                                // Highlight corresponding legend
+                                const legendItem = lineElements[lineData.name].legend;
+                                if (legendItem) {
+                                    legendItem.select("text")
+                                        .transition()
+                                        .duration(200)
+                                        .style("fill", "white")
+                                        .style("font-weight", "600");
+                                    legendItem.select("line")
+                                        .transition()
+                                        .duration(200)
+                                        .attr("stroke-width", 3.5)
+                                        .style("opacity", 1)
+                                        .style("filter", "drop-shadow(0 0 4px " + lineData.color + ")");
+                                }
+                            })
+                            .on("mouseleave", function() {
+                                // Unhighlight path
+                                pathElement
+                                    .transition()
+                                    .duration(200)
+                                    .attr("stroke-width", 2)
+                                    .attr("filter", null);
+
+                                // Unhighlight corresponding legend
+                                const legendItem = lineElements[lineData.name].legend;
+                                if (legendItem) {
+                                    legendItem.select("text")
+                                        .transition()
+                                        .duration(200)
+                                        .style("fill", "rgba(255, 255, 255, 0.85)")
+                                        .style("font-weight", "400");
+                                    legendItem.select("line")
+                                        .transition()
+                                        .duration(200)
+                                        .attr("stroke-width", 2.5)
+                                        .style("opacity", 1)
+                                        .style("filter", "none");
+                                }
+                            });
+                    });
             });
 
             // Add legend - bottom right position
@@ -1492,7 +1621,11 @@
 
             lines.forEach((lineData, i) => {
                 const legendRow = legend.append("g")
-                    .attr("transform", `translate(0, ${i * 18})`);
+                    .attr("transform", `translate(0, ${i * 18})`)
+                    .style("cursor", "pointer");
+
+                // Store legend reference
+                lineElements[lineData.name].legend = legendRow;
 
                 // Colored line
                 legendRow.append("line")
@@ -1512,6 +1645,57 @@
                     .style("font-family", "system-ui, -apple-system, sans-serif")
                     .style("font-weight", "400")
                     .text(lineData.label);
+
+                // Add hover effects to legend
+                legendRow
+                    .on("mouseenter", function() {
+                        // Highlight legend
+                        d3.select(this).select("text")
+                            .transition()
+                            .duration(200)
+                            .style("fill", "white")
+                            .style("font-weight", "600");
+                        d3.select(this).select("line")
+                            .transition()
+                            .duration(200)
+                            .attr("stroke-width", 3.5)
+                            .style("opacity", 1)
+                            .style("filter", "drop-shadow(0 0 4px " + lineData.color + ")");
+
+                        // Highlight corresponding path
+                        const pathElement = lineElements[lineData.name].path;
+                        if (pathElement) {
+                            pathElement
+                                .transition()
+                                .duration(200)
+                                .attr("stroke-width", 3)
+                                .attr("filter", "url(#glow)");
+                        }
+                    })
+                    .on("mouseleave", function() {
+                        // Unhighlight legend
+                        d3.select(this).select("text")
+                            .transition()
+                            .duration(200)
+                            .style("fill", "rgba(255, 255, 255, 0.85)")
+                            .style("font-weight", "400");
+                        d3.select(this).select("line")
+                            .transition()
+                            .duration(200)
+                            .attr("stroke-width", 2.5)
+                            .style("opacity", 1)
+                            .style("filter", "none");
+
+                        // Unhighlight corresponding path
+                        const pathElement = lineElements[lineData.name].path;
+                        if (pathElement) {
+                            pathElement
+                                .transition()
+                                .duration(200)
+                                .attr("stroke-width", 2)
+                                .attr("filter", null);
+                        }
+                    });
             });
             }).catch(error => {
                 console.error("Error loading CSV data:", error);
