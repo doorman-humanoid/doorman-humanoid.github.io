@@ -441,6 +441,16 @@
             border: 2px dashed rgba(255, 255, 255, 0.2);
         }
 
+        #bootstrap-chart {
+            border: none;
+            background: transparent;
+            min-height: 200px;
+        }
+
+        #bootstrap-chart svg {
+            display: block;
+        }
+
         .icon-container {
             flex: 0 0 auto;
         }
@@ -762,7 +772,7 @@
                 </div>
                 <div class="tsb-item">
                     <div class="tsb-content">
-                        <div class="tsb-placeholder"></div>
+                        <div id="bootstrap-chart" class="tsb-placeholder"></div>
                         <div class="tsb-label">Phase 3: Fine-tune student with GRPO</div>
                     </div>
                 </div>
@@ -811,6 +821,9 @@
     <!-- GSAP CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- D3.js CDN -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     
     <script>
         // Register ScrollTrigger plugin
@@ -1284,6 +1297,229 @@
                 }
             };
         }
+
+        // ========================================
+        // Bootstrap Chart - D3.js Line Plot
+        // ========================================
+
+        function createBootstrapChart() {
+            // Chart dimensions
+            const chartContainer = document.getElementById('bootstrap-chart');
+            if (!chartContainer) return;
+
+            const containerWidth = chartContainer.offsetWidth;
+            const containerHeight = containerWidth * (9/16); // 16:9 aspect ratio
+
+            const margin = {top: 20, right: 30, bottom: 40, left: 50};
+            const width = containerWidth - margin.left - margin.right;
+            const height = containerHeight - margin.top - margin.bottom;
+
+            // Create SVG
+            const svg = d3.select("#bootstrap-chart")
+                .append("svg")
+                .attr("width", containerWidth)
+                .attr("height", containerHeight)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            // Load and process data
+            d3.csv("media/data.csv").then(data => {
+            // Convert strings to numbers and scale to percentage
+            data.forEach(d => {
+                d.Step = +d.Step;
+                d.push = +d.push * 100;
+                d.pull = +d.pull * 100;
+                d.pushbar = +d.pushbar * 100;
+            });
+
+            // Sort by Step to ensure correct order
+            data.sort((a, b) => a.Step - b.Step);
+
+            // Moving average smoothing function
+            const movingAverage = (data, key, windowSize = 10) => {
+                return data.map((d, i) => {
+                    const start = Math.max(0, i - Math.floor(windowSize / 2));
+                    const end = Math.min(data.length, i + Math.ceil(windowSize / 2));
+                    const window = data.slice(start, end);
+                    const avg = window.reduce((sum, item) => sum + item[key], 0) / window.length;
+                    return { ...d, [key]: avg };
+                });
+            };
+
+            // Apply moving average to smooth the data
+            let smoothedData = data;
+            ['push', 'pull', 'pushbar'].forEach(key => {
+                smoothedData = movingAverage(smoothedData, key, 10);
+            });
+
+            // Subsample data - take every 5th point to reduce density
+            const subsampleRate = 5;
+            const subsampledData = smoothedData.filter((d, i) => i % subsampleRate === 0);
+
+            // Scales
+            const xDomain = [0, d3.max(subsampledData, d => d.Step)];
+            const x = d3.scaleLinear()
+                .domain(xDomain)
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain([50, 95])
+                .range([height, 0]);
+
+            // Grid lines - subtle and modern
+            svg.append("g")
+                .attr("class", "grid")
+                .call(d3.axisLeft(y)
+                    .tickValues([50, 70, 90])
+                    .tickSize(-width)
+                    .tickFormat("")
+                )
+                .call(g => g.select(".domain").remove())
+                .selectAll("line")
+                .style("stroke", "rgba(255, 255, 255, 0.1)")
+                .style("stroke-width", 1);
+
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x)
+                    .tickSize(-height)
+                    .tickFormat("")
+                )
+                .call(g => g.select(".domain").remove())
+                .selectAll("line")
+                .style("stroke", "rgba(255, 255, 255, 0.1)")
+                .style("stroke-width", 1);
+
+            // Axes - modern minimal style
+            const xAxis = svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).ticks(5).tickSize(5))
+                .call(g => g.select(".domain").remove());
+
+            xAxis.selectAll("line").style("stroke", "rgba(255, 255, 255, 0.5)");
+            xAxis.selectAll("text")
+                .style("fill", "rgba(255, 255, 255, 0.8)")
+                .style("font-size", "11px")
+                .style("font-family", "system-ui, -apple-system, sans-serif");
+
+            const yAxis = svg.append("g")
+                .call(d3.axisLeft(y).tickValues([50, 70, 90]).tickSize(5).tickFormat(d => d + "%"))
+                .call(g => g.select(".domain").remove());
+
+            yAxis.selectAll("line").style("stroke", "rgba(255, 255, 255, 0.5)");
+            yAxis.selectAll("text")
+                .style("fill", "rgba(255, 255, 255, 0.8)")
+                .style("font-size", "11px")
+                .style("font-family", "system-ui, -apple-system, sans-serif");
+
+            // Axis labels - modern style
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("x", width / 2)
+                .attr("y", height + 35)
+                .style("fill", "rgba(255, 255, 255, 0.7)")
+                .style("font-size", "12px")
+                .style("font-family", "system-ui, -apple-system, sans-serif")
+                .style("font-weight", "500")
+                .text("Iteration");
+
+            svg.append("text")
+                .attr("text-anchor", "middle")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -40)
+                .attr("x", -height / 2)
+                .style("fill", "rgba(255, 255, 255, 0.7)")
+                .style("font-size", "12px")
+                .style("font-family", "system-ui, -apple-system, sans-serif")
+                .style("font-weight", "500")
+                .text("Success Rate");
+
+            // Line generator
+            const line = d3.line()
+                .x(d => x(d.Step))
+                .y(d => y(d.value));
+
+            // Line colors and labels
+            const lineColors = {
+                push: "#bff230",
+                pull: "#76b900",
+                pushbar: "#3f8500"
+            };
+
+            const lineLabels = {
+                push: "Push Door w/ Handle",
+                pull: "Pull Door w/ Handle",
+                pushbar: "Push Door w/ Push-Bar"
+            };
+
+            // Prepare data for each line
+            const lines = ['push', 'pull', 'pushbar'].map(key => ({
+                name: key,
+                color: lineColors[key],
+                label: lineLabels[key],
+                values: subsampledData.map(d => ({Step: d.Step, value: d[key]}))
+            }));
+
+            // Draw lines with animation
+            lines.forEach((lineData, i) => {
+                const path = svg.append("path")
+                    .datum(lineData.values)
+                    .attr("fill", "none")
+                    .attr("stroke", lineData.color)
+                    .attr("stroke-width", 2)
+                    .attr("d", line);
+
+                // Get total length for animation
+                const totalLength = path.node().getTotalLength();
+
+                // Animate drawing from left to right
+                path
+                    .attr("stroke-dasharray", totalLength + " " + totalLength)
+                    .attr("stroke-dashoffset", totalLength)
+                    .transition()
+                    .duration(2000)
+                    .delay(i * 200) // Stagger each line slightly
+                    .ease(d3.easeLinear)
+                    .attr("stroke-dashoffset", 0);
+            });
+
+            // Add legend - bottom right position
+            const legendHeight = lines.length * 18;
+            const legend = svg.append("g")
+                .attr("class", "legend")
+                .attr("transform", `translate(${width - 180}, ${height - legendHeight - 5})`);
+
+            lines.forEach((lineData, i) => {
+                const legendRow = legend.append("g")
+                    .attr("transform", `translate(0, ${i * 18})`);
+
+                // Colored line
+                legendRow.append("line")
+                    .attr("x1", 0)
+                    .attr("x2", 20)
+                    .attr("y1", 6)
+                    .attr("y2", 6)
+                    .attr("stroke", lineData.color)
+                    .attr("stroke-width", 2.5);
+
+                // Label text - modern style
+                legendRow.append("text")
+                    .attr("x", 25)
+                    .attr("y", 10)
+                    .style("fill", "rgba(255, 255, 255, 0.85)")
+                    .style("font-size", "10px")
+                    .style("font-family", "system-ui, -apple-system, sans-serif")
+                    .style("font-weight", "400")
+                    .text(lineData.label);
+            });
+            }).catch(error => {
+                console.error("Error loading CSV data:", error);
+            });
+        }
+
+        // Call chart creation after a short delay to ensure layout is complete
+        setTimeout(createBootstrapChart, 100);
     </script>
 </body>
 </html>
