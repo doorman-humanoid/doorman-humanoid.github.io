@@ -352,12 +352,27 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
+        .demo-subsection {
+            margin-top: 3rem;
+        }
+
+        .demo-subsection:first-child {
+            margin-top: 2rem;
+        }
+
+        .demo-subsection-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+
         .demo-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
             width: 100%;
-            margin-top: 2rem;
         }
 
         .demo-grid video,
@@ -376,6 +391,34 @@
             justify-content: center;
             color: rgba(255, 255, 255, 0.3);
             font-size: 0.9rem;
+        }
+
+        .failure-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .failure-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .failure-item video {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .failure-caption {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            font-style: italic;
         }
 
         .tsb-flow {
@@ -566,6 +609,10 @@
             .demo-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
+            }
+            .failure-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
             }
             .tsb-flow {
                 flex-direction: column;
@@ -785,13 +832,53 @@
             <div class="section-content">
                 <p>Our policy demonstrates robust generalization to diverse real-world scenarios, successfully manipulating various door types under different environmental conditions.</p>
             </div>
-            <div class="demo-grid">
-                <div class="demo-placeholder">Demo 1</div>
-                <div class="demo-placeholder">Demo 2</div>
-                <div class="demo-placeholder">Demo 3</div>
-                <div class="demo-placeholder">Demo 4</div>
-                <div class="demo-placeholder">Demo 5</div>
-                <div class="demo-placeholder">Demo 6</div>
+
+            <!-- Diverse Handle Shape -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Diverse Handle Shape</h3>
+                <div class="demo-grid">
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Handle 1.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Handle 2.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Handle 3.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <!-- Diverse Visuals -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Diverse Visuals</h3>
+                <div class="demo-grid">
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Panel 1.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Panel 2.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_1/Generalization Panel 3.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+
+            <!-- Diverse Locations and Door Types -->
+            <div class="demo-subsection">
+                <h3 class="demo-subsection-title">Diverse Locations and Door Types</h3>
+                <div class="demo-grid">
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_1/Door 1 Multi View.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_1/Door 2 Multi View.mp4" type="video/mp4">
+                    </video>
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_2/Door 3 Multi View.mp4" type="video/mp4">
+                    </video>
+                </div>
             </div>
         </div>
 
@@ -799,9 +886,28 @@
         <div class="section">
             <h2 class="section-title">Failure Cases</h2>
             <div class="section-content">
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+                <p>While our policy demonstrates strong performance across diverse scenarios, we observe failure modes that highlight areas for future improvement. Common failure patterns include unobserved disturbances, distance estimation errors, and difficulties with unmodeled environmental states.</p>
             </div>
-            <div class="placeholder-image">[Failure Cases Video Placeholder]</div>
+            <div class="failure-grid">
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_2/Door 1 Failure.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Stuck on door frame</div>
+                </div>
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_2/Door 2 Failure.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Inaccurate distance gauging</div>
+                </div>
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline>
+                        <source src="media/demos_loc_2/Door 3 Failure.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Unmodeled articulation state</div>
+                </div>
+            </div>
         </div>
     </div>
 
