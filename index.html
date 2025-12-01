@@ -170,7 +170,7 @@
         .section {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 80px 40px;
+            padding: 50px 40px;
         }
 
         .paper-title-section {
@@ -269,6 +269,18 @@
             animation: gradientShift 4s ease infinite;
             filter: brightness(1.2);
             margin-left: 0.15em;
+        }
+
+        .highlight-text {
+            display: inline-block;
+            font-weight: 700;
+            background: linear-gradient(120deg, #76b900, #a8e063, #56ab2f, #76b900);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 4s ease infinite;
+            filter: brightness(1.2);
         }
 
         @keyframes gradientShift {
@@ -511,16 +523,13 @@
 
         .bibtex-section {
             background: transparent;
-            padding: 80px 40px;
-        }
-
-        .bibtex-container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 50px 40px;
         }
 
         .bibtex-code {
-            background: #1a1a1a;
+            background: #2a2a2a;
             border: 1px solid #333;
             border-radius: 8px;
             padding: 2rem;
@@ -583,7 +592,7 @@
                 font-size: 1.8rem;
             }
             .section {
-                padding: 60px 20px;
+                padding: 40px 20px;
             }
             .logos-section {
                 flex-direction: column;
@@ -882,6 +891,34 @@
             </div>
         </div>
 
+        <!-- Faster than Human Section -->
+        <div class="section">
+            <h2 class="section-title">Up to <span class="highlight-text">31.7%</span> Faster than Human</h2>
+            <div class="section-content">
+                <p>DoorMan on average completes the door opening task by up to <strong>7.15 seconds</strong> faster than human teleoperators, who struggle with skillful loco-manipulation with articulated objects.</p>
+            </div>
+            <div class="failure-grid">
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_1/Teleop 1.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Unfluent teleoperator fails to open the door.</div>
+                </div>
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_1/Teleop 2.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Teleoperator struggles to grasp door handle.</div>
+                </div>
+                <div class="failure-item">
+                    <video autoplay muted loop playsinline controls>
+                        <source src="media/demos_loc_1/Teleop 3.mp4" type="video/mp4">
+                    </video>
+                    <div class="failure-caption">Robot fails to balance under articulation constraint and falls.</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Failure Cases Section -->
         <div class="section">
             <h2 class="section-title">Failure Cases</h2>
@@ -909,11 +946,17 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- BibTeX Section -->
-    <div class="bibtex-section">
-        <div class="bibtex-container">
+        <!-- Abstract Section -->
+        <div class="section">
+            <h2 class="section-title">Abstract</h2>
+            <div class="section-content">
+                <p>Recent progress in GPU-accelerated, photorealistic simulation has opened a scalable data-generation path for robot learning, where massive physics and visual randomization allow policies to generalize beyond curated environments. Building on these advances, we develop a teacher-student-bootstrap learning framework for vision-based humanoid loco-manipulation, using articulated-object interaction as a representative high-difficulty benchmark. Our approach introduces a staged-reset exploration strategy that stabilizes long-horizon privileged-policy training, and a GRPO-based fine-tuning procedure that mitigates partial observability and improves closed-loop consistency in sim-to-real RL. Trained entirely on simulation data, the resulting policy achieves robust zero-shot performance across diverse door types and outperforms human teleoperators by up to 31.7% in task completion time under the same whole-body control stack. This represents the first humanoid sim-to-real policy capable of diverse articulated loco-manipulation using pure RGB perception.</p>
+            </div>
+        </div>
+
+        <!-- BibTeX Section -->
+        <div class="bibtex-section">
             <h2 class="section-title">Citation</h2>
             <pre class="bibtex-code">@article{doorman2024,
   title={DoorMan: Opening the Sim-to-Real Door for Humanoid Pixel-to-Action Policy Transfer},
