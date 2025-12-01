@@ -732,10 +732,10 @@
         </div>
 
         <div class="video-container" id="video-container">
-            <video autoplay muted loop playsinline controls>
+            <video autoplay muted loop playsinline controls preload="metadata">
                 <source src="media/demos_loc_2/Door 1 Multi View.mp4" type="video/mp4">
             </video>
-            <video autoplay muted loop playsinline controls>
+            <video autoplay muted loop playsinline controls preload="metadata">
                 <source src="media/demos_loc_2/Door 2 Multi View.mp4" type="video/mp4">
             </video>
         </div>
@@ -788,10 +788,10 @@
                 <p>We use a procedural generation pipeline that randomizes physical and visual properties of articulated objects: mass, handle type, hinge damping, stiffness, texture, background, etc.</p>
             </div>
             <div class="video-grid">
-                <video autoplay muted loop playsinline>
+                <video autoplay muted loop playsinline preload="metadata">
                     <source src="media/sim/Sim Doors.mp4" type="video/mp4">
                 </video>
-                <video autoplay muted loop playsinline>
+                <video autoplay muted loop playsinline preload="metadata">
                     <source src="media/sim/doors_1080.mp4" type="video/mp4">
                 </video>
             </div>
@@ -806,7 +806,7 @@
             <div class="tsb-flow">
                 <div class="tsb-item">
                     <div class="tsb-content">
-                        <video class="tsb-video" autoplay muted loop playsinline>
+                        <video class="tsb-video" autoplay muted loop playsinline preload="metadata">
                             <source src="media/pull_solid_door_no_texture_fixed_cam_exported.mp4" type="video/mp4">
                         </video>
                         <div class="tsb-label">Phase 1: Train privileged teacher with PPO<br><b>(1 L40s GPU, 6 hours)</b></div>
@@ -840,7 +840,7 @@
                 </div>
                 <div class="tsb-item">
                     <div class="tsb-content">
-                        <video class="tsb-video" autoplay muted loop playsinline>
+                        <video class="tsb-video" autoplay muted loop playsinline preload="metadata">
                             <source src="media/sim/Sim Pull Open Door Fixed Angle.mp4" type="video/mp4">
                         </video>
                         <div class="tsb-label">Phase 2: Distill onto vision student with DAgger<br><b>(32 L40s GPUs, 24 hours)</b></div>
@@ -910,13 +910,13 @@
             <div class="demo-subsection">
                 <h3 class="demo-subsection-title">Diverse Handle Shape</h3>
                 <div class="demo-grid">
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Handle 1.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Handle 2.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Handle 3.mp4" type="video/mp4">
                     </video>
                 </div>
@@ -926,13 +926,13 @@
             <div class="demo-subsection">
                 <h3 class="demo-subsection-title">Diverse Visuals</h3>
                 <div class="demo-grid">
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Panel 1.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Panel 2.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_1/Generalization Panel 3.mp4" type="video/mp4">
                     </video>
                 </div>
@@ -942,13 +942,13 @@
             <div class="demo-subsection">
                 <h3 class="demo-subsection-title">Diverse Locations and Door Types</h3>
                 <div class="demo-grid">
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_1/Door 1 Multi View.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_1/Door 2 Multi View.mp4" type="video/mp4">
                     </video>
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_2/Door 3 Multi View.mp4" type="video/mp4">
                     </video>
                 </div>
@@ -963,19 +963,19 @@
             </div>
             <div class="failure-grid">
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_1/Teleop 1.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Unfluent teleoperator fails to open the door.</div>
                 </div>
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_1/Teleop 2.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Teleoperator struggles to grasp door handle.</div>
                 </div>
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline controls>
+                    <video autoplay muted loop playsinline controls preload="metadata">
                         <source src="media/demos_loc_1/Teleop 3.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Robot fails to balance under articulation constraint and falls.</div>
@@ -991,19 +991,19 @@
             </div>
             <div class="failure-grid">
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_2/Door 1 Failure.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Stuck on door frame</div>
                 </div>
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_2/Door 2 Failure.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Inaccurate distance gauging</div>
                 </div>
                 <div class="failure-item">
-                    <video autoplay muted loop playsinline>
+                    <video autoplay muted loop playsinline preload="metadata">
                         <source src="media/demos_loc_2/Door 3 Failure.mp4" type="video/mp4">
                     </video>
                     <div class="failure-caption">Unmodeled articulation state</div>
@@ -1126,28 +1126,36 @@
         const images2 = [];
         let imagesLoaded = false;
 
-        // Create loading promises for both sequences
+        // Progressive lazy loading strategy
+        // Load initial frames first, then load rest in background
+        const initialFramesToLoad = isMobile ? 10 : 20; // Load fewer frames initially on mobile
         const loadPromises = [];
 
+        // Pre-create all image objects
         for (let i = 0; i < frameCount1; i++) {
-            const img = new Image();
+            images1.push(new Image());
+        }
+        for (let i = 0; i < frameCount2; i++) {
+            images2.push(new Image());
+        }
+
+        // Load initial frames for sequence 1
+        for (let i = 0; i < Math.min(initialFramesToLoad, frameCount1); i++) {
             const promise = new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve; // Still resolve on error to not block
+                images1[i].onload = resolve;
+                images1[i].onerror = resolve;
             });
-            img.src = getFrame1(i);
-            images1.push(img);
+            images1[i].src = getFrame1(i);
             loadPromises.push(promise);
         }
 
-        for (let i = 0; i < frameCount2; i++) {
-            const img = new Image();
+        // Load initial frames for sequence 2
+        for (let i = 0; i < Math.min(initialFramesToLoad, frameCount2); i++) {
             const promise = new Promise((resolve) => {
-                img.onload = resolve;
-                img.onerror = resolve; // Still resolve on error to not block
+                images2[i].onload = resolve;
+                images2[i].onerror = resolve;
             });
-            img.src = getFrame2(i);
-            images2.push(img);
+            images2[i].src = getFrame2(i);
             loadPromises.push(promise);
         }
 
@@ -1155,9 +1163,9 @@
             progress: 0
         };
 
-        // Wait for all images to load before starting animation
+        // Start animation once initial frames are loaded
         Promise.all(loadPromises).then(() => {
-            console.log('All images loaded successfully');
+            console.log('Initial frames loaded, starting animation');
             imagesLoaded = true;
             render(); // Initial render
 
@@ -1173,7 +1181,42 @@
                 },
                 onUpdate: render
             });
+
+            // Load remaining frames in background with lower priority
+            loadRemainingFrames();
         });
+
+        // Function to load remaining frames in background
+        function loadRemainingFrames() {
+            // Use requestIdleCallback for better performance if available
+            const scheduleLoad = window.requestIdleCallback || ((cb) => setTimeout(cb, 1));
+
+            let currentIndex1 = initialFramesToLoad;
+            let currentIndex2 = initialFramesToLoad;
+
+            function loadNextBatch() {
+                const batchSize = 5; // Load 5 frames at a time
+
+                // Load next batch from sequence 1
+                for (let i = 0; i < batchSize && currentIndex1 < frameCount1; i++, currentIndex1++) {
+                    images1[currentIndex1].src = getFrame1(currentIndex1);
+                }
+
+                // Load next batch from sequence 2
+                for (let i = 0; i < batchSize && currentIndex2 < frameCount2; i++, currentIndex2++) {
+                    images2[currentIndex2].src = getFrame2(currentIndex2);
+                }
+
+                // Continue loading if there are more frames
+                if (currentIndex1 < frameCount1 || currentIndex2 < frameCount2) {
+                    scheduleLoad(loadNextBatch);
+                } else {
+                    console.log('All frames loaded in background');
+                }
+            }
+
+            scheduleLoad(loadNextBatch);
+        }
 
         // Helper function to draw image covering the entire canvas (like CSS background-size: cover)
         function drawImageCover(img) {
