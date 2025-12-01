@@ -129,7 +129,7 @@
             font-size: 1.2rem;
             font-weight: 400;
             letter-spacing: 1px;
-            z-index: 3;
+            z-index: 10;
             color: white;
         }
 
@@ -139,6 +139,62 @@
 
         .header-right {
             right: 3rem;
+        }
+
+        .top-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .nav-buttons {
+            position: fixed;
+            top: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: #76b900;
+            transition: width 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .nav-btn:hover::after {
+            width: 100%;
         }
 
         .video-container {
@@ -435,7 +491,7 @@
 
         .tsb-flow {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: space-between;
             gap: 0.5rem;
             margin-top: 3rem;
@@ -451,6 +507,7 @@
 
         .tsb-item:has(.icon-container) {
             flex: 0 0 80px;
+            align-self: center;
         }
 
         .tsb-content {
@@ -499,7 +556,6 @@
         #bootstrap-chart {
             border: none;
             background: transparent;
-            min-height: 200px;
         }
 
         #bootstrap-chart svg {
@@ -648,8 +704,16 @@
 
     <div class="dark-overlay" id="dark-overlay"></div>
 
+    <div class="top-gradient"></div>
+
     <div class="header-title header-left">DoorMan</div>
     <div class="header-title header-right">NVIDIA GEAR Team</div>
+
+    <div class="nav-buttons">
+        <a href="#" class="nav-btn" id="nav-home">Home</a>
+        <a href="#" class="nav-btn" id="nav-paper">Paper Details</a>
+        <a href="#" class="nav-btn" id="nav-arxiv">arXiv</a>
+    </div>
 
     <div class="content">
         <div class="title-section" id="title-section">
@@ -745,7 +809,7 @@
                         <video class="tsb-video" autoplay muted loop playsinline>
                             <source src="media/pull_solid_door_no_texture_fixed_cam_exported.mp4" type="video/mp4">
                         </video>
-                        <div class="tsb-label">Phase 1: Train privileged teacher with PPO</div>
+                        <div class="tsb-label">Phase 1: Train privileged teacher with PPO<br><b>(1 L40s GPU, 6 hours)</b></div>
                     </div>
                 </div>
                 <div class="tsb-item">
@@ -779,7 +843,7 @@
                         <video class="tsb-video" autoplay muted loop playsinline>
                             <source src="media/sim/Sim Pull Open Door Fixed Angle.mp4" type="video/mp4">
                         </video>
-                        <div class="tsb-label">Phase 2: Distill onto vision student with DAgger</div>
+                        <div class="tsb-label">Phase 2: Distill onto vision student with DAgger<br><b>(32 L40s GPUs, 24 hours)</b></div>
                     </div>
                 </div>
                 <div class="tsb-item">
@@ -829,7 +893,7 @@
                 <div class="tsb-item">
                     <div class="tsb-content">
                         <div id="bootstrap-chart" class="tsb-placeholder"></div>
-                        <div class="tsb-label">Phase 3: Fine-tune student with GRPO</div>
+                        <div class="tsb-label">Phase 3: Fine-tune student with GRPO<br><b>(64 L40s GPUs, 12 hours)</b></div>
                     </div>
                 </div>
             </div>
@@ -1853,6 +1917,25 @@
 
         // Call chart creation after a short delay to ensure layout is complete
         setTimeout(createBootstrapChart, 100);
+
+        // Navigation button handlers
+        document.getElementById('nav-home').addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.getElementById('nav-paper').addEventListener('click', function(e) {
+            e.preventDefault();
+            const paperSection = document.querySelector('.paper-title-section');
+            if (paperSection) {
+                paperSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+
+        document.getElementById('nav-arxiv').addEventListener('click', function(e) {
+            e.preventDefault();
+            // arXiv link will be added later
+        });
     </script>
 </body>
 </html>
