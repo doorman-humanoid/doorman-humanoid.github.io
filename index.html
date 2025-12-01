@@ -118,9 +118,12 @@
             bottom: 2rem;
             left: 50%;
             transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95rem;
             z-index: 3;
+            opacity: 0;
+            letter-spacing: 0.5px;
+            font-weight: 400;
         }
 
         .header-title {
@@ -150,6 +153,72 @@
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
             z-index: 5;
             pointer-events: none;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+        }
+
+        .loading-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            color: #76b900;
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            position: relative;
+        }
+
+        .spinner-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-top-color: #76b900;
+            border-radius: 50%;
+            animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        .spinner-ring:nth-child(2) {
+            border-top-color: #a8e063;
+            animation-duration: 2s;
+            animation-delay: -0.3s;
+        }
+
+        .spinner-ring:nth-child(3) {
+            border-top-color: #56ab2f;
+            animation-duration: 2.5s;
+            animation-delay: -0.6s;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .nav-buttons {
@@ -683,6 +752,12 @@
                 flex-direction: column;
                 gap: 3rem;
             }
+            .tsb-item {
+                width: 100%;
+            }
+            .tsb-item:has(.icon-container) {
+                width: auto;
+            }
             .placeholder-figure {
                 min-height: 200px;
                 width: 100%;
@@ -696,10 +771,41 @@
                 font-size: 0.85rem;
                 max-width: 100%;
             }
+            .nav-buttons {
+                top: 4.5rem;
+                left: 0;
+                transform: none;
+                width: 100%;
+                padding: 0 1.5rem;
+                gap: 0.5rem;
+                justify-content: center;
+            }
+            .nav-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+            .loading-text {
+                font-size: 1.2rem;
+                letter-spacing: 1px;
+            }
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-text">Loading Experience...</div>
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+    </div>
+
     <canvas id="background-canvas" class="background-canvas"></canvas>
 
     <div class="dark-overlay" id="dark-overlay"></div>
@@ -1169,6 +1275,16 @@
             imagesLoaded = true;
             render(); // Initial render
 
+            // Hide loading screen with fade out effect
+            const loadingScreen = document.getElementById('loading-screen');
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+                // Remove from DOM after fade completes
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                }, 800);
+            }, 300); // Small delay to ensure first frame renders
+
             // Single unified scroll animation
             gsap.to(doorman, {
                 progress: 1,
@@ -1424,6 +1540,23 @@
                 end: "97% bottom",
                 scrub: true
             }
+        });
+
+        // Scroll indicator initial fade-in animation
+        gsap.to(scrollIndicator, {
+            opacity: 1,
+            duration: 1.5,
+            delay: 1,
+            ease: "power2.out"
+        });
+
+        // Scroll indicator continuous bounce animation
+        gsap.to(scrollIndicator, {
+            y: -10,
+            duration: 1.2,
+            ease: "power1.inOut",
+            repeat: -1,
+            yoyo: true
         });
 
         // Scroll indicator fade out (95%-97% scroll) - hide when paper title section appears
