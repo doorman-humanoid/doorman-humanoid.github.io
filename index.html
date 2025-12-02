@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RJSDHZD03T"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RJSDHZD03T');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DoorMan - NVIDIA GEAR Lab</title>
@@ -673,6 +683,76 @@
             overflow-x: auto;
         }
 
+        .technical-details {
+            margin-top: 2rem;
+        }
+
+        .technical-details summary {
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #76b900;
+            padding: 1rem 0;
+            list-style: none;
+            user-select: none;
+            transition: color 0.3s ease;
+        }
+
+        .technical-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .technical-details summary::before {
+            content: '▶';
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .technical-details[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .technical-details summary:hover {
+            color: #a8e063;
+        }
+
+        .technical-details-content {
+            padding: 1rem 0 1rem 1.5rem;
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.8;
+        }
+
+        .technical-details-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .technical-details-content li {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .technical-details-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #76b900;
+            font-weight: bold;
+        }
+
+        .technical-details-content a {
+            color: #76b900;
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .technical-details-content a:hover {
+            border-bottom-color: #76b900;
+        }
+
         @media (max-width: 768px) {
             .title-section {
                 left: 5%;
@@ -729,6 +809,16 @@
             }
             .bibtex-section {
                 padding: 40px 20px;
+            }
+            .technical-details summary {
+                font-size: 1rem;
+            }
+            .technical-details-content {
+                font-size: 0.9rem;
+                padding-left: 0.5rem;
+            }
+            .technical-details-content li {
+                padding-left: 1rem;
             }
             .logos-section {
                 flex-direction: column;
@@ -1145,6 +1235,30 @@
   journal={arXiv preprint arXiv:XXXX.XXXXX},
   year={2024}
 }</pre>
+
+            <!-- Technical Details Collapsible -->
+            <details class="technical-details">
+                <summary>Interested in the simulation rendering / website template?</summary>
+                <div class="technical-details-content">
+                    <ul>
+                        <li>
+                            <strong>Website Source Code:</strong> The website source code can be found at <a href="https://github.com/doorman-humanoid/doorman-humanoid.github.io" target="_blank" rel="noopener noreferrer">here</a>. The <code>CLAUDE.md</code> file contains comprehensive documentation that enables coding agents to understand and adapt this website template for other projects.
+                        </li>
+                        <li>
+                            <strong>Simulation Rendering with IsaacSim:</strong> All simulation rendering is done using IsaacSim. The workflow involves:
+                            <ol style="margin-top: 0.5rem; padding-left: 1.5rem;">
+                                <li>Recording rollouts as USD animation files following <a href="https://isaac-sim.github.io/IsaacLab/main/source/how-to/record_animation.html" target="_blank" rel="noopener noreferrer">IsaacLab's animation recording guide</a></li>
+                                <li>Opening the USD files interactively in IsaacSim</li>
+                                <li>Generating camera flyby trajectories using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_animation-motionpath.html" target="_blank" rel="noopener noreferrer">Animation Curve extension</a></li>
+                                <li>Recording final videos using the <a href="https://docs.omniverse.nvidia.com/extensions/latest/ext_core/ext_movie-capture.html" target="_blank" rel="noopener noreferrer">Movie Capture extension</a></li>
+                            </ol>
+                        </li>
+                        <li>
+                            <strong>Contact:</strong> For further guidance on the website implementation or simulation rendering pipeline, please contact Haoru Xue at <a href="mailto:haoru-xue@berkeley.edu">haoru-xue@berkeley.edu</a>.
+                        </li>
+                    </ul>
+                </div>
+            </details>
         </div>
     </div>
 
