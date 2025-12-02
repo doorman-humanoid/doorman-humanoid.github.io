@@ -923,7 +923,7 @@
     <div class="nav-buttons">
         <a href="#" class="nav-btn" id="nav-home">Home</a>
         <a href="#" class="nav-btn" id="nav-paper">Paper Details</a>
-        <a href="#" class="nav-btn" id="nav-arxiv">arXiv</a>
+        <a href="https://arxiv.org/abs/2512.01061" class="nav-btn" id="nav-arxiv" target="_blank" rel="noopener noreferrer">arXiv</a>
     </div>
 
     <div class="content">
@@ -2246,11 +2246,6 @@
             if (paperSection) {
                 paperSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-        });
-
-        document.getElementById('nav-arxiv').addEventListener('click', function(e) {
-            e.preventDefault();
-            // arXiv link will be added later
         });
     </script>
 </body>
